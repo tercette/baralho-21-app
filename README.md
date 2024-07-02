@@ -1,6 +1,7 @@
 # Baralho21App
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.6.
+Angular material used for components
 
 ## Development server
 
