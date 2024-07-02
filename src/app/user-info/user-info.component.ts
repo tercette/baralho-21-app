@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-user-info',
   templateUrl: './user-info.component.html',
-  styleUrl: './user-info.component.css'
+  styleUrls: ['./user-info.component.css']
 })
 export class UserInfoComponent {
-
+  @Input() score: number = 0;
+  userName: string = '';
 }
