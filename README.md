@@ -26,3 +26,21 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Documentacao para tratamento de erros e melhor experiencia do usuario
+
+Os botoes "Pedir Carta" e "Reiniciar Jogo" foram tratados com validacao para que ao final do jogo. Eles ficam desativados para que o usuario nao possa clicar e trazer mais cartas gerando uma ma experiencia do jogo
+
+O campo nome, é automaticamente preenchido quando o jogo se inicia, forcando o jogador a entrar com o nome e armazenando omesmo dinamicamente no input
+
+O botao "Parar", ao entrar com o mouse, apresenta uma mensagem concatenando o nome do usuario e lhe proporcionando uma melhor experiencia. Ao deixar o botao, a mensagem desaparece.
+
+A pontuacao é capturada dinamicamente quando o usuario recebe uma carta, e retirada automaticamente quando o usuario realiza o drag end drop para a lixeira
+
+Um dialog é utilizado para a captura do valor do "AS" antes do jogo comecar
+
+Outro Dialog é utilizado para a captura do valor do nome antes do jogo comecar
+
+Foi utilizado o Angular Material para uma experiencia fluida, amigavel e mais compativel pois faz parte do bundle do Angular
+
+
