@@ -5,4 +5,7 @@
   (stopGameEvent)="onStopGame()"
 ></app-game-controls>
 <app-user-info [score]="score"></app-user-info>
-<app-card-display [cards]="userCards"></app-card-display>
+<app-card-display [cards]="userCards" (cardRemoved)="onCardRemoved($event)"></app-card-display>
+<div style="text-align: end;" class="footer">
+  <button class="stop-button" (click)="onStopGame()">Parar</button>
+</div>

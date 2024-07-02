@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DeckService } from './deck-service.service';
 
+interface Card {
+  value: string;
+  image: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,8 +13,9 @@ import { DeckService } from './deck-service.service';
 })
 export class AppComponent implements OnInit {
   score: number = 0;
-  userCards: string[] = [];
+  userCards: Card[] = [];
   usedTrash: boolean = false;
+  showBottomButton: boolean = true;
 
   constructor(private deckService: DeckService) {}
 
@@ -23,6 +29,7 @@ export class AppComponent implements OnInit {
       this.score = 0;
       this.userCards = [];
       this.usedTrash = false;
+      this.showBottomButton = true;
     });
   }
 
@@ -30,7 +37,7 @@ export class AppComponent implements OnInit {
     const deckId = this.deckService.getDeckId();
     this.deckService.drawCard(deckId).subscribe(data => {
       const newCard = data.cards[0];
-      this.userCards.push(newCard.value);
+      this.userCards.push({ value: newCard.value, image: newCard.image });
       this.score += this.getCardValue(newCard.value);
       this.checkGameStatus();
     });
@@ -47,7 +54,19 @@ export class AppComponent implements OnInit {
     } else {
       alert('Você ganhou!');
     }
-    this.startNewGame();
+    this.startNewGame(); // Reiniciar o jogo após parar
+    this.showBottomButton = true;
+  }
+
+  onCardRemoved(cardIndex: number) {
+    console.log('Carta removida:', cardIndex);
+    if (this.usedTrash) {
+      return;
+    }
+    const card = this.userCards[cardIndex];
+    this.userCards.splice(cardIndex, 1);
+    this.score -= this.getCardValue(card.value);
+    this.usedTrash = true;
   }
 
   getCardValue(card: string): number {
@@ -63,8 +82,10 @@ export class AppComponent implements OnInit {
   checkGameStatus() {
     if (this.score > 21) {
       alert('Você perdeu!');
+      this.startNewGame(); // Reiniciar o jogo após perder
     } else if (this.score === 21) {
       alert('Você ganhou!');
+      this.startNewGame(); // Reiniciar o jogo após ganhar
     }
   }
 }

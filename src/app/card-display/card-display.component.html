@@ -1,5 +1,9 @@
-<div class="card-display">
-  <div *ngFor="let card of cards" cdkDrag class="card">
-    {{ card }}
-  </div>
+<label *ngIf="cards.length > 0">Minha mão</label>
+<div style="margin-top: 60px; display: flex; justify-content: start;  align-items: start;" class="card-display">
+  <img *ngFor="let card of cards; let i = index" [src]="card.image" [cdkDragData]="card" cdkDrag class="card" />
 </div>
+
+<div style="display: flex;  justify-content: end;" class="trash" cdkDropList (cdkDropListDropped)="onDrop($event)">
+  🗑️
+</div>
+<hr>
