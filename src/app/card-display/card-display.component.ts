@@ -1,5 +1,17 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDrag,
+  CdkDropList,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+interface Card {
+  value: string;
+  image: string;
+  displayValue?: number;
+}
 
 @Component({
   selector: 'app-card-display',
@@ -7,18 +19,25 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./card-display.component.css'],
 })
 export class CardDisplayComponent {
-  @Input() cards: { value: string, image: string }[] = [];
+  @Input() cards: Card[] = [];
   @Output() cardRemoved = new EventEmitter<number>();
 
 
 
-  Drop(event: CdkDragDrop<string[]>) {
-    console.log('Carta descartada:', event);
-    const cardIndex = event.previousIndex;
-    const card = this.cards[cardIndex];
-    this.cards.splice(cardIndex, 1);
-    this.cardRemoved.emit(cardIndex);
+  onDrop(event: CdkDragDrop<{ value: string, image: string }[]>) {
+    console.log('Evento de drop:', event);
+    if (event.previousContainer === event.container) {
+      // Lógica para reordenar dentro do mesmo container
+    } else {
+      const cardIndex = this.cards.findIndex(card => card.value === event.item.data.value);
+      if (cardIndex > -1) {
+        console.log('Carta descartada:', this.cards[cardIndex]);
+        this.cards.splice(cardIndex, 1);
+        this.cardRemoved.emit(cardIndex);
+      }
+    }
   }
-
-
 }
+
+
+

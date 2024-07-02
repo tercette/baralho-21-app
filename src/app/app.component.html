@@ -1,16 +1,14 @@
-
 <mat-card appearance="outlined">
   <app-header></app-header>
   <mat-card-header></mat-card-header>
-<app-game-controls
-  (drawCardEvent)="onDrawCard()"
-  (restartGameEvent)="onRestartGame()"
-  (stopGameEvent)="onStopGame()"
-></app-game-controls>
-<app-user-info [score]="score"></app-user-info>
-<app-card-display [cards]="userCards" (cardRemoved)="onCardRemoved($event)"></app-card-display>
-<div style="text-align: end;" class="footer">
-  <button mat-raised-button class="stop-button" (click)="onStopGame()">Parar</button>
-</div>
+  <app-game-controls
+    (drawCardEvent)="onDrawCard()"
+    (restartGameEvent)="onRestartGame()"
+    (stopGameEvent)="onStopGame()"
+  ></app-game-controls>
+  <app-user-info [score]="score"></app-user-info>
+  <app-card-display [cards]="userCards" (cardRemoved)="onCardRemoved($event)"></app-card-display>
+  <div style="text-align: end;" class="footer">
+    <button mat-raised-button class="stop-button" (click)="onStopGame()">Parar</button>
+  </div>
 </mat-card>
-

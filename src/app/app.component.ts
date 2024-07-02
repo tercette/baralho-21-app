@@ -4,6 +4,7 @@ import { DeckService } from './deck-service.service';
 interface Card {
   value: string;
   image: string;
+  displayValue?: number;
 }
 
 @Component({
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   userCards: Card[] = [];
   usedTrash: boolean = false;
   showBottomButton: boolean = true;
+  aceValue: number = 1;
 
   constructor(private deckService: DeckService) {}
 
@@ -24,6 +26,28 @@ export class AppComponent implements OnInit {
   }
 
   startNewGame() {
+    let aceInput: string | null = null;
+    let aceValue: number = 1;
+    let validInput: boolean = false;
+
+    while (!validInput) {
+      aceInput = prompt('Escolha o valor do Ás (1 a 10):');
+      if (aceInput !== null) {
+        aceValue = parseInt(aceInput, 10);
+        if (aceValue >= 1 && aceValue <= 10) {
+          validInput = true;
+        } else {
+          alert('Valor inválido! Insira um número entre 1 e 11.');
+        }
+      } else {
+        alert('Valor inválido! O Ás será considerado como 1.');
+        aceValue = 1;
+        validInput = true;
+      }
+    }
+
+    this.aceValue = aceValue;
+
     this.deckService.createDeck().subscribe(data => {
       this.deckService.setDeckId(data.deck_id);
       this.score = 0;
@@ -37,7 +61,8 @@ export class AppComponent implements OnInit {
     const deckId = this.deckService.getDeckId();
     this.deckService.drawCard(deckId).subscribe(data => {
       const newCard = data.cards[0];
-      this.userCards.push({ value: newCard.value, image: newCard.image });
+      const displayValue = newCard.value === 'ACE' ? this.aceValue : this.getCardValue(newCard.value);
+      this.userCards.push({ value: newCard.value, image: newCard.image, displayValue});
       this.score += this.getCardValue(newCard.value);
       this.checkGameStatus();
     });
@@ -54,7 +79,7 @@ export class AppComponent implements OnInit {
     } else {
       alert('Você ganhou!');
     }
-    this.startNewGame(); // Reiniciar o jogo após parar
+    this.startNewGame();
     this.showBottomButton = true;
   }
 
@@ -70,11 +95,17 @@ export class AppComponent implements OnInit {
   }
 
   getCardValue(card: string): number {
-    if (['JACK', 'QUEEN', 'KING'].includes(card)) {
-      return 10;
+    if (card === 'JACK') {
+      return 11;
+    }
+    if (card === 'QUEEN') {
+      return 12;
+    }
+    if (card === 'KING') {
+      return 13;
     }
     if (card === 'ACE') {
-      return 1; // ou 11, dependendo da regra que você escolher
+      return this.aceValue;
     }
     return parseInt(card, 10);
   }
@@ -82,10 +113,8 @@ export class AppComponent implements OnInit {
   checkGameStatus() {
     if (this.score > 21) {
       alert('Você perdeu!');
-      this.startNewGame(); // Reiniciar o jogo após perder
     } else if (this.score === 21) {
       alert('Você ganhou!');
-      this.startNewGame(); // Reiniciar o jogo após ganhar
     }
   }
 }
