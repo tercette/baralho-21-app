@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DeckService } from './deck-service.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NameInputDialogComponent } from './name-input-dialog/name-input-dialog.component';
+import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.component';
 
 interface Card {
   value: string;
@@ -13,7 +14,7 @@ interface Card {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   score: number = 0;
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
   usedTrash: boolean = false;
   showBottomButton: boolean = true;
   aceValue: number = 1;
+  userName: string = '';
 
   constructor(
     private deckService: DeckService,
@@ -29,14 +31,27 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.startNewGame();
+    this.openNameInputDialog();
+  }
+
+  openNameInputDialog() {
+    const dialogRef = this.dialog.open(NameInputDialogComponent, {
+      width: '250px',
+      disableClose: true,
+      data: { userName: this.userName }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.userName = result;
+        this.startNewGame();
+      }
+    });
   }
 
   startNewGame() {
-    this.openAceValueDialog(); // Abre o modal para escolha do Ás
-
-    // Cria um novo baralho usando o serviço DeckService
-    this.deckService.createDeck().subscribe(data => {
+    this.openAceValueDialog();
+    this.deckService.createDeck().subscribe((data) => {
       this.deckService.setDeckId(data.deck_id);
       this.score = 0;
       this.userCards = [];
@@ -48,10 +63,10 @@ export class AppComponent implements OnInit {
   openAceValueDialog(): void {
     const dialogRef = this.dialog.open(AceValueDialogComponent, {
       width: '250px',
-      data: { aceValue: this.aceValue }
+      data: { aceValue: this.aceValue },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
         this.aceValue = result;
       }
@@ -60,10 +75,17 @@ export class AppComponent implements OnInit {
 
   onDrawCard() {
     const deckId = this.deckService.getDeckId();
-    this.deckService.drawCard(deckId).subscribe(data => {
+    this.deckService.drawCard(deckId).subscribe((data) => {
       const newCard = data.cards[0];
-      const displayValue = newCard.value === 'ACE' ? this.aceValue : this.getCardValue(newCard.value);
-      this.userCards.push({ value: newCard.value, image: newCard.image, displayValue});
+      const displayValue =
+        newCard.value === 'ACE'
+          ? this.aceValue
+          : this.getCardValue(newCard.value);
+      this.userCards.push({
+        value: newCard.value,
+        image: newCard.image,
+        displayValue,
+      });
       this.score += this.getCardValue(newCard.value);
       this.checkGameStatus();
     });
@@ -74,7 +96,6 @@ export class AppComponent implements OnInit {
   }
 
   onStopGame() {
-
     this.startNewGame();
     this.showBottomButton = true;
   }
@@ -107,12 +128,20 @@ export class AppComponent implements OnInit {
 
   checkGameStatus() {
     if (this.score > 21) {
-      this.snackBar.open('Você perdeu!', 'Fechar', {
+      let snackBarRef = this.snackBar.open(`Você perdeu, ${this.userName}!`, 'Fechar', {
         duration: 5000,
       });
+
+      snackBarRef.afterDismissed().subscribe(() => {
+        this.startNewGame();
+      });
     } else if (this.score === 21) {
-      this.snackBar.open('Você ganhou!', 'Fechar', {
+      let snackBarRef = this.snackBar.open(`Você ganhou, ${this.userName}!`, 'Fechar', {
         duration: 5000,
+      });
+
+      snackBarRef.afterDismissed().subscribe(() => {
+        this.startNewGame();
       });
     }
   }

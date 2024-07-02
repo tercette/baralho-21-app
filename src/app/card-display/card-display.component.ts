@@ -29,7 +29,6 @@ export class CardDisplayComponent {
     } else {
       const cardIndex = this.cards.findIndex(card => card.value === event.item.data.value);
       if (cardIndex > -1) {
-        console.log('Carta descartada:', this.cards[cardIndex]);
         this.cards.splice(cardIndex, 1);
         this.cardRemoved.emit(cardIndex);
       }

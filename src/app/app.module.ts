@@ -16,6 +16,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.component';
+import { NameInputDialogComponent } from './name-input-dialog/name-input-dialog.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.com
     UserInfoComponent,
     CardDisplayComponent,
     AceValueDialogComponent,
+    NameInputDialogComponent,
 
   ],
   imports: [

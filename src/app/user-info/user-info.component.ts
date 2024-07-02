@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class UserInfoComponent {
   @Input() score: number = 0;
-  userName: string = '';
+  @Input() userName: string = '';
 }
