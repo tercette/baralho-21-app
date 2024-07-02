@@ -1,5 +1,5 @@
 <div class="game-controls">
-  <button mat-raised-button (click)="drawCard()">Pedir Carta</button>
-  <button mat-raised-button (click)="restartGame()">Reiniciar Jogo</button>
+  <button mat-raised-button (click)="drawCard()" [disabled]="gameEnded">Pedir Carta</button>
+  <button mat-raised-button (click)="restartGame()" [disabled]="gameEnded">Reiniciar Jogo</button>
 </div>
 <hr>

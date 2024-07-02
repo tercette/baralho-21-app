@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DeckService } from './deck-service.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { NameInputDialogComponent } from './name-input-dialog/name-input-dialog.component';
 import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.component';
 
@@ -23,12 +23,14 @@ export class AppComponent implements OnInit {
   showBottomButton: boolean = true;
   aceValue: number = 1;
   userName: string = '';
+  stopGameSnackBarRef: MatSnackBarRef<any> | undefined;
+  gameEnded: boolean = false;
 
   constructor(
     private deckService: DeckService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.openNameInputDialog();
@@ -69,6 +71,7 @@ export class AppComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
         this.aceValue = result;
+        this.gameEnded = false;
       }
     });
   }
@@ -93,21 +96,37 @@ export class AppComponent implements OnInit {
 
   onRestartGame() {
     this.startNewGame();
+
   }
 
   onStopGame() {
-    this.startNewGame();
-    this.showBottomButton = true;
+    const randomNumber = Math.floor(Math.random() * (21 - 16 + 1)) + 16;
+    if (randomNumber === 21) {
+      this.stopGameSnackBarRef = this.snackBar.open(`Você ganhou, ${this.userName}!`, 'Fechar', { duration: 5000 });
+    } else {
+      this.stopGameSnackBarRef = this.snackBar.open(`Você perdeu, ${this.userName}!`, 'Fechar', { duration: 5000 });
+    }
+
+    if (this.stopGameSnackBarRef) {
+      this.stopGameSnackBarRef.afterDismissed().subscribe(() => {
+        this.startNewGame();
+        this.showBottomButton = true;
+        // Reset the snackbar reference
+        this.stopGameSnackBarRef = undefined;
+      });
+    }
   }
 
   onCardRemoved(cardIndex: number) {
-    if (this.usedTrash) {
-      return;
+    const value = this.userCards.map((card) => card.value);
+    const stringValue = value[0];
+
+    if (!isNaN(Number(stringValue))) {
+        const number = parseFloat(stringValue);
+        this.score = number;
+    } else {
+        this.score = 0;
     }
-    const card = this.userCards[cardIndex];
-    this.userCards.splice(cardIndex, 1);
-    this.score -= this.getCardValue(card.value);
-    this.usedTrash = true;
   }
 
   getCardValue(card: string): number {
@@ -128,7 +147,8 @@ export class AppComponent implements OnInit {
 
   checkGameStatus() {
     if (this.score > 21) {
-      let snackBarRef = this.snackBar.open(`Você perdeu, ${this.userName}!`, 'Fechar', {
+      this.gameEnded = true;
+      let snackBarRef = this.snackBar.open(`Você perdeu, ${this.userName}! Atingiu ${this.score} pontos`, 'Fechar', {
         duration: 5000,
       });
 
@@ -136,13 +156,33 @@ export class AppComponent implements OnInit {
         this.startNewGame();
       });
     } else if (this.score === 21) {
-      let snackBarRef = this.snackBar.open(`Você ganhou, ${this.userName}!`, 'Fechar', {
+      this.gameEnded = true;
+      let snackBarRef = this.snackBar.open(`Parabens você ganhou, ${this.userName}! Fez ${this.score} pontos`, 'Fechar', {
         duration: 5000,
       });
 
       snackBarRef.afterDismissed().subscribe(() => {
         this.startNewGame();
       });
+    }
+  }
+
+  showStopGameSnackbar() {
+    if (!this.stopGameSnackBarRef) {
+      this.stopGameSnackBarRef = this.snackBar.open(
+        `Clique para parar um tiro único. Cuidado ${this.userName} , você pode vencer ou perder!`,
+        '',
+        {
+          duration: 0,
+        }
+      );
+    }
+  }
+
+  hideStopGameSnackbar() {
+    if (this.stopGameSnackBarRef) {
+      this.stopGameSnackBarRef.dismiss();
+      this.stopGameSnackBarRef = undefined;
     }
   }
 }

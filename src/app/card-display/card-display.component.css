@@ -3,7 +3,8 @@
   display: flex;
   justify-content: start;
   align-items: start;
-  gap: 10px
+  gap: 10px;
+  min-height: 200px;
 }
 
 .trash {
@@ -15,4 +16,9 @@
   cursor: pointer;
   width: 100%;
   height: 100%;
+}
+
+.cdk-drag-preview {
+  opacity: 0.5;
+  border: 1px dashed #ccc;
 }

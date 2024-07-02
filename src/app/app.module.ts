@@ -17,7 +17,7 @@ import {MatCardModule} from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.component';
 import { NameInputDialogComponent } from './name-input-dialog/name-input-dialog.component';
-
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,8 @@ import { NameInputDialogComponent } from './name-input-dialog/name-input-dialog.
     MatButtonModule,
     MatInputModule,
     MatCardModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule
   ],
   providers: [
     provideAnimationsAsync()

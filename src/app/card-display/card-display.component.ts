@@ -1,16 +1,9 @@
-import {
-  CdkDragDrop,
-  CdkDrag,
-  CdkDropList,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 interface Card {
   value: string;
   image: string;
-  displayValue?: number;
 }
 
 @Component({
@@ -22,19 +15,11 @@ export class CardDisplayComponent {
   @Input() cards: Card[] = [];
   @Output() cardRemoved = new EventEmitter<number>();
 
-
-
-  onDrop(event: CdkDragDrop<{ value: string, image: string }[]>) {
-    if (event.previousContainer === event.container) {
-    } else {
-      const cardIndex = this.cards.findIndex(card => card.value === event.item.data.value);
-      if (cardIndex > -1) {
-        this.cards.splice(cardIndex, 1);
-        this.cardRemoved.emit(cardIndex);
-      }
+  onTrashDrop(event: CdkDragDrop<Card[]>) {
+    if (event.previousContainer !== event.container) {
+      const cardIndex = event.previousIndex;
+      this.cards.splice(cardIndex, 1);
+      this.cardRemoved.emit(cardIndex);
     }
   }
 }
-
-
-
