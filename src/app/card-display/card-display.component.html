@@ -1,1 +1,5 @@
-<p>card-display works!</p>
+<div class="card-display">
+  <div *ngFor="let card of cards" cdkDrag class="card">
+    {{ card }}
+  </div>
+</div>
