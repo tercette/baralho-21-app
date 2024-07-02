@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
       this.usedTrash = false;
       this.showBottomButton = true;
     });
+
   }
 
   onDrawCard() {

@@ -25,9 +25,7 @@ export class CardDisplayComponent {
 
 
   onDrop(event: CdkDragDrop<{ value: string, image: string }[]>) {
-    console.log('Evento de drop:', event);
     if (event.previousContainer === event.container) {
-      // Lógica para reordenar dentro do mesmo container
     } else {
       const cardIndex = this.cards.findIndex(card => card.value === event.item.data.value);
       if (cardIndex > -1) {
