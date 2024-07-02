@@ -9,6 +9,7 @@ import { HeaderComponent } from './header/header.component';
 import { GameControlsComponent } from './game-controls/game-controls.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { CardDisplayComponent } from './card-display/card-display.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -18,13 +19,14 @@ import { CardDisplayComponent } from './card-display/card-display.component';
     GameControlsComponent,
     UserInfoComponent,
     CardDisplayComponent,
- 
+
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    DragDropModule
+    DragDropModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
