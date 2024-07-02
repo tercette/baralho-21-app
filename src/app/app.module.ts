@@ -14,6 +14,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatButtonModule } from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.component';
 
 
 @NgModule({
@@ -23,6 +25,7 @@ import {MatCardModule} from '@angular/material/card';
     GameControlsComponent,
     UserInfoComponent,
     CardDisplayComponent,
+    AceValueDialogComponent,
 
   ],
   imports: [
@@ -34,7 +37,8 @@ import {MatCardModule} from '@angular/material/card';
     BrowserAnimationsModule,
     MatButtonModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatDialogModule
   ],
   providers: [
     provideAnimationsAsync()

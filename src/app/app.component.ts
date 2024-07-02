@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DeckService } from './deck-service.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AceValueDialogComponent } from './ace-value-dialog/ace-value-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Card {
   value: string;
@@ -19,35 +22,20 @@ export class AppComponent implements OnInit {
   showBottomButton: boolean = true;
   aceValue: number = 1;
 
-  constructor(private deckService: DeckService) {}
+  constructor(
+    private deckService: DeckService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.startNewGame();
   }
 
   startNewGame() {
-    let aceInput: string | null = null;
-    let aceValue: number = 1;
-    let validInput: boolean = false;
+    this.openAceValueDialog(); // Abre o modal para escolha do Ás
 
-    while (!validInput) {
-      aceInput = prompt('Escolha o valor do Ás (1 a 10):');
-      if (aceInput !== null) {
-        aceValue = parseInt(aceInput, 10);
-        if (aceValue >= 1 && aceValue <= 10) {
-          validInput = true;
-        } else {
-          alert('Valor inválido! Insira um número entre 1 e 11.');
-        }
-      } else {
-        alert('Valor inválido! O Ás será considerado como 1.');
-        aceValue = 1;
-        validInput = true;
-      }
-    }
-
-    this.aceValue = aceValue;
-
+    // Cria um novo baralho usando o serviço DeckService
     this.deckService.createDeck().subscribe(data => {
       this.deckService.setDeckId(data.deck_id);
       this.score = 0;
@@ -55,7 +43,19 @@ export class AppComponent implements OnInit {
       this.usedTrash = false;
       this.showBottomButton = true;
     });
+  }
 
+  openAceValueDialog(): void {
+    const dialogRef = this.dialog.open(AceValueDialogComponent, {
+      width: '250px',
+      data: { aceValue: this.aceValue }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        this.aceValue = result;
+      }
+    });
   }
 
   onDrawCard() {
@@ -74,18 +74,12 @@ export class AppComponent implements OnInit {
   }
 
   onStopGame() {
-    const dealerScore = Math.floor(Math.random() * 6) + 16;
-    if (dealerScore > this.score) {
-      alert('Você perdeu!');
-    } else {
-      alert('Você ganhou!');
-    }
+
     this.startNewGame();
     this.showBottomButton = true;
   }
 
   onCardRemoved(cardIndex: number) {
-    console.log('Carta removida:', cardIndex);
     if (this.usedTrash) {
       return;
     }
@@ -113,9 +107,13 @@ export class AppComponent implements OnInit {
 
   checkGameStatus() {
     if (this.score > 21) {
-      alert('Você perdeu!');
+      this.snackBar.open('Você perdeu!', 'Fechar', {
+        duration: 5000,
+      });
     } else if (this.score === 21) {
-      alert('Você ganhou!');
+      this.snackBar.open('Você ganhou!', 'Fechar', {
+        duration: 5000,
+      });
     }
   }
 }

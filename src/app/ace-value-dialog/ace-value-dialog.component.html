@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Escolha o valor do Ás</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput type="number" placeholder="Valor do Ás (1 a 10)" [(ngModel)]="aceValue" min="1" max="10">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onConfirm()">Confirmar</button>
+</div>
