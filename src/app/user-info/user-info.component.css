@@ -6,3 +6,8 @@
   justify-content: center;
   gap: 30px;
 }
+
+.wrapper
+ {
+  display: flex; flex-direction: column
+ }

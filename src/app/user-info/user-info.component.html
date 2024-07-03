@@ -1,14 +1,13 @@
 <div
   class="user-info"
-  style="display: flex; align-items: center; justify-content: center; gap: 30px"
 >
-  <div style="display: flex; flex-direction: column">
+  <div class="wrapper" >
     <mat-form-field>
       <mat-label for="userName">Nome:</mat-label>
       <input matInput type="text" [(ngModel)]="userName" />
     </mat-form-field>
   </div>
-  <div style="display: flex; flex-direction: column">
+  <div>
     <mat-form-field>
       <mat-label>Pontuação: </mat-label>
       <input matInput value="{{ score }}" readonly />
